@@ -96,9 +96,9 @@ contour_plot <- function(start_x, start_y, x_expression, y_expression, bins, tit
     geom_contour_filled(mapping = aes(x = beta_1, y = beta_2, z = z),
                         color = "grey", binwidth = bins) +
     annotate("point", x = coef(ll_max)[1], y = coef(ll_max)[2], shape = 3) +
-    annotate("text", x = coef(ll_max)[1], y = coef(ll_max)[2], label = "Global Maximum", vjust = -1) +
+    annotate("text", x = coef(ll_max)[1], y = coef(ll_max)[2], label = "Global Maximum", vjust = ifelse(coef(ll_max)[2] < start_y, 1.35, -1.35), size = unit(10, "pt") / .pt) +
     annotate("point", x = start_x, y = start_y) +
-    annotate("text", x = start_x, y = start_y, label = "Starting Values", vjust = 1.25) +
+    annotate("text", x = start_x, y = start_y, label = "Starting Values", vjust = ifelse(coef(ll_max)[2] < start_y, -1.35, 1.35), size = unit(10, "pt") /.pt) +
     annotate("segment", x = start_x, y = start_y + 0.1, xend = coef(ll_max)[1], yend = coef(ll_max)[2] - 0.1, arrow = arrow()) +
     labs(
       title = title,
@@ -109,7 +109,12 @@ contour_plot <- function(start_x, start_y, x_expression, y_expression, bins, tit
     scale_fill_brewer(palette = "Blues", direction = -1) +
     theme_bw() +
     theme(
-      legend.position = "bottom"
+      legend.position = "bottom",
+      axis.title.x = element_text(size = 10),
+      axis.title.y = element_text(size = 10),
+      legend.title = element_text(size = 10),
+      axis.text = element_text(size = 10),
+      legend.text = element_text(size = 10)
     )
 }
 
@@ -145,7 +150,7 @@ contour_plot(
 )
 
 # Save the plot to the "Figures" folder
-ggsave(file.path("Figures", "Figure-8-1.png"))
+ggsave(file.path("Figures", "Figure-8-1.png"), width = 7, height = 7, units = "in")
 
 ## Hessian matrix ----
 ll_max$hessian
@@ -184,7 +189,7 @@ contour_plot(
 )
 
 # Save the plot to the "Figures" folder
-ggsave(file.path("Figures", "Figure-8-2.png"))
+ggsave(file.path("Figures", "Figure-8-2.png"), width = 7, height = 7, units = "in")
 
 ## Hessian matrix ----
 ll_max$hessian
@@ -223,7 +228,7 @@ contour_plot(
 )
 
 # Save the plot to the "Figures" folder
-ggsave(file.path("Figures", "Figure-8-3.png"))
+ggsave(file.path("Figures", "Figure-8-3.png"), width = 7, height = 7, units = "in")
 
 ## Hessian matrix ----
 ll_max$hessian
@@ -305,7 +310,7 @@ p1 + p2 + p3 +
 
 
 # Save the plot to the "Figures" folder
-ggsave(file.path("Figures", "Figure-8-4.png"))
+ggsave(file.path("Figures", "Figure-8-4.png"), width = 11, height = 11, units = "in")
 
 
 # Figure 3.5 - BFGS - Diff starting values ----
@@ -354,7 +359,7 @@ p1 + p2 + p3 +
 
 
 # Save the plot to the "Figures" folder
-ggsave(file.path("Figures", "Figure-8-5.png"))
+ggsave(file.path("Figures", "Figure-8-5.png"), width = 11, height = 11, units = "in")
 
 # Sample variation in practice ----
 # NOTE! There is some code duplication from above to ensure that the file
@@ -438,11 +443,18 @@ estimates_2 <- map_df(models, tidy) |>
 estimates_1 |>
   bind_rows(estimates_2) |>
   ggplot() +
-  geom_histogram(mapping = aes(x = estimate), bins = 30) +
+  geom_histogram(mapping = aes(x = estimate), bins = 75, color = "white") +
   geom_vline(xintercept = 0.5, color = "red", lty = 2, lwd = 1) +
-  facet_grid(factor(simulation, levels = c("50 observations", "100 observations")) ~ factor(term)) +
+  facet_grid(factor(simulation, levels = c("50 observations", "100 observations"), labels = c("'50 observations'", "'100 observations'")) ~ factor(term, labels = c("ASC", "beta[1]")), labeller = label_parsed) +
   labs(x = "Parameter estimate", y = "Count") +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    legend.title = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 12)
+  )
 
-
-ggsave(file.path("Figures", "Figure-8-6.png"))
+ggsave(file.path("Figures", "Figure-8-6.png"), width = 7.5, height = 7.5, units = "in")
