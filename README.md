@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 This is the repository for scripts and data accompanying the book
-“Environmental Valuation with Discrete Choice Experiments” by.
+“Environmental Valuation with Discrete Choice Experiments”.
 
 ## Authors
 

@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-This is the repository for scripts and data accompanying the book "Environmental Valuation with Discrete Choice Experiments" by.
+This is the repository for scripts and data accompanying the book "Environmental Valuation with Discrete Choice Experiments".
 
 ## Authors
 
