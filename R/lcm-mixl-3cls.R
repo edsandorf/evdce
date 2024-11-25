@@ -32,8 +32,8 @@ apollo_beta = c(
   cl1_asc_alt3            =   0.545758 ,
   cl1_b_medium_farms      =   0.276174 ,
   cl1_b_small_farms       =   0.317038 ,
-  cl1_b_medium_turbines   =   0.483379 ,
-  cl1_b_low_turbines      =   0.935015 ,
+  cl1_b_medium_height   =   0.483379 ,
+  cl1_b_low_height      =   0.935015 ,
   cl1_b_red_kite          =  -0.044793 ,
   cl1_b_min_distance      =   0.508801 ,
   cl1_b_cost              =  -0.755394 ,
@@ -44,8 +44,8 @@ apollo_beta = c(
   cl2_asc_alt3            =  1.293037 ,
   cl2_b_medium_farms      = -0.564934   ,
   cl2_b_small_farms       =  0.154396  ,
-  cl2_b_medium_turbines   = -0.779586   ,
-  cl2_b_low_turbines      =  0.444429  ,
+  cl2_b_medium_height   = -0.779586   ,
+  cl2_b_low_height      =  0.444429  ,
   cl2_b_red_kite          = -0.063537  ,
   cl2_b_min_distance      =  0.199549  ,
   cl2_b_cost              = -0.326024  ,
@@ -55,8 +55,8 @@ apollo_beta = c(
   cl3_asc_alt3            =  -1.103430 ,
   cl3_b_medium_farms      =   0.028382  ,
   cl3_b_small_farms       =  -0.625295 ,
-  cl3_b_medium_turbines   =   0.326533  ,
-  cl3_b_low_turbines      =  -0.264425 ,
+  cl3_b_medium_height   =   0.326533  ,
+  cl3_b_low_height      =  -0.264425 ,
   cl3_b_red_kite          =   0.061798 ,
   cl3_b_min_distance      =  -0.946585 ,
   cl3_b_cost              =   0.582736 ,
@@ -95,8 +95,8 @@ apollo_lcPars=function(apollo_beta, apollo_inputs){
   lcpars[["asc_alt3"         ]] = list(cl1_asc_alt3          , cl2_asc_alt3         , cl3_asc_alt3          )
   lcpars[["b_medium_farms"   ]] = list(cl1_b_medium_farms    , cl2_b_medium_farms   , cl3_b_medium_farms    )
   lcpars[["b_small_farms"    ]] = list(cl1_b_small_farms     , cl2_b_small_farms    , cl3_b_small_farms     )
-  lcpars[["b_medium_turbines"]] = list(cl1_b_medium_turbines , cl2_b_medium_turbines, cl3_b_medium_turbines )
-  lcpars[["b_low_turbines"   ]] = list(cl1_b_low_turbines    , cl2_b_low_turbines   , cl3_b_low_turbines    )
+  lcpars[["b_medium_height"]] = list(cl1_b_medium_height , cl2_b_medium_height, cl3_b_medium_height )
+  lcpars[["b_low_height"   ]] = list(cl1_b_low_height    , cl2_b_low_height   , cl3_b_low_height    )
   lcpars[["b_red_kite"       ]] = list(cl1_b_red_kite        , cl2_b_red_kite       , cl3_b_red_kite        )
   lcpars[["b_min_distance"   ]] = list(cl1_b_min_distance    , cl2_b_min_distance   , cl3_b_min_distance    )
   lcpars[["b_cost"           ]] = list(cl1_b_cost            , cl2_b_cost           , cl3_b_cost            )
@@ -153,8 +153,8 @@ apollo_probabilities=function(apollo_beta, apollo_inputs, functionality="estimat
     V[["alt1"]] = (   asc_alt1         [[s]]
                       + b_medium_farms   [[s]] * alt1_farm2   
                       + b_small_farms    [[s]] * alt1_farm3   
-                      + b_medium_turbines[[s]] * alt1_height2 
-                      + b_low_turbines   [[s]] * alt1_height3 
+                      + b_medium_height[[s]] * alt1_height2 
+                      + b_low_height   [[s]] * alt1_height3 
                       + b_red_kite       [[s]] * alt1_redkite 
                       + b_min_distance   [[s]] * alt1_distance
                       + b_cost           [[s]] * alt1_cost     )
@@ -162,8 +162,8 @@ apollo_probabilities=function(apollo_beta, apollo_inputs, functionality="estimat
     V[["alt2"]] = (   asc_alt2         [[s]]
                       + b_medium_farms   [[s]] * alt2_farm2   
                       + b_small_farms    [[s]] * alt2_farm3   
-                      + b_medium_turbines[[s]] * alt2_height2 
-                      + b_low_turbines   [[s]] * alt2_height3 
+                      + b_medium_height[[s]] * alt2_height2 
+                      + b_low_height   [[s]] * alt2_height3 
                       + b_red_kite       [[s]] * alt2_redkite 
                       + b_min_distance   [[s]] * alt2_distance
                       + b_cost           [[s]] * alt2_cost     ) 
@@ -171,8 +171,8 @@ apollo_probabilities=function(apollo_beta, apollo_inputs, functionality="estimat
     V[["alt3"]] = (   asc_alt3         [[s]]
                       + b_medium_farms   [[s]] * alt3_farm2   
                       + b_small_farms    [[s]] * alt3_farm3   
-                      + b_medium_turbines[[s]] * alt3_height2 
-                      + b_low_turbines   [[s]] * alt3_height3 
+                      + b_medium_height[[s]] * alt3_height2 
+                      + b_low_height   [[s]] * alt3_height3 
                       + b_red_kite       [[s]] * alt3_redkite 
                       + b_min_distance   [[s]] * alt3_distance
                       + b_cost           [[s]] * alt3_cost     )
