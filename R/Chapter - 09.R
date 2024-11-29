@@ -16,8 +16,8 @@ apollo_control = list(
 
 ## Import data ----
 # Read in the data and filter out missing choices
-database <- read_csv(file.path("Data", "data-windmills.csv")) |>
-  filter(!is.na(choice))
+database <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
+  clean_names()
 
 ## Set the starting values of the parameters ----
 apollo_beta <- c(
@@ -305,8 +305,8 @@ apollo_control = list(
 
 ## Import data ----
 # Read in the data and filter out missing choices
-database <- read_csv(file.path("Data", "data-windmills.csv")) |>
-  filter(!is.na(choice))
+database <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
+  clean_names()
 
 ## Set the starting values of the parameters ----
 apollo_beta <- c(
@@ -542,8 +542,6 @@ x_values |>
     plot.title = element_blank()
   )
 
-
-
 # Generate a density plot with true heterogeneity ----
 tibble(
   true_heterogeneity = c(rnorm(20000, mean = -0.5, sd = 0.3), rnorm(30000, mean = 1, sd = 0.3)),
@@ -622,8 +620,8 @@ apollo_control = list(
 
 ## Import data ----
 # Read in the data and filter out missing choices
-database <- read_csv(file.path("Data", "data-windmills.csv")) |>
-  filter(!is.na(choice))
+database <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
+  clean_names()
 
 ## Set the starting values of the parameters ----
 apollo_beta <- c(

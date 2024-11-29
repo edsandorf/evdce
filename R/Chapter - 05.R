@@ -3,7 +3,7 @@ library(tidyverse)
 library(spdesign)
 
 # Read in the experimental design ----
-design <- readRDS(file.path("Data", "design-windmills.rds"))
+design <- readRDS(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/design-windmills.rds")))
 
 # Full factorial ----
 ## Generating the full factorial ----

@@ -5,7 +5,7 @@ library(janitor)
 library(patchwork)
 
 # Load the data ----
-data_wind <- read_csv(file.path("Data", "data-windmills.csv")) |>
+data_wind <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
   clean_names()
 
 # Mutate some of the variables
@@ -201,11 +201,11 @@ choice_table |>
   cols_label(
     frequency = "Frequency",
     number_of_choices_1 = "SQ",
-    number_of_choices_2 = "Alternative 1",
-    number_of_choices_3 = "Alternative 2",
+    number_of_choices_2 = "Alternative B",
+    number_of_choices_3 = "Alternative C",
     share_of_choices_1 = "SQ",
-    share_of_choices_2 = "Alternative 1",
-    share_of_choices_3 = "Alternative 2"
+    share_of_choices_2 = "Alternative B",
+    share_of_choices_3 = "Alternative C"
   ) |>
   fmt_number(columns = vars(starts_with("share")), decimals = 2)
 

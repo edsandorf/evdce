@@ -55,7 +55,8 @@ sheet_append(
 )
 
 # Read in the design ----
-design <- readRDS(file.path("Data", "design-windmills.rds"))
+design <- readRDS(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/design-windmills.rds")))
+
 design <- design$design
 
 # Attributes
