@@ -34,9 +34,13 @@ full_fact <- full_factorial(
 full_fact[1:6, c(1, 8:12)]
 
 ## The candidate set ----
-candidate_set <- full_fact[!((full_fact$alt2_height > 1 & full_fact$alt2_distance < 0.75) | (full_fact$alt3_height > 1 & full_fact$alt3_distance < 0.75)), ]
+candidate_set <- full_fact[!((full_fact$alt2_height == 1 & full_fact$alt2_distance < 0.75) | (full_fact$alt3_height == 1 & full_fact$alt3_distance < 0.75)), ]
 
 candidate_set[1:6, c(1, 8:12)]
+
+summary(candidate_set)
+
+candidate_set[candidate_set$alt2_height == 1 & candidate_set$alt2_distance < 0.75, ]
 
 # Generating a design ----
 ## Define the utility function ----
