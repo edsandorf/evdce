@@ -409,14 +409,14 @@ tibble(
 ## Delta method ----
 deltaMethod_settings <- list(
   expression = c(
-    wtp_lowest = "-(b_small_farms + delta_sf_age * 80 + delta_sf_female * 0 + delta_sf_educ * 3) /
-                   (b_cost + delta_ct_age * 80 + delta_ct_female * 0 + delta_ct_educ * 3)",
+    wtp_lowest = "-(b_small_farms + delta_sf_age * 80 + delta_sf_female * 1 + delta_sf_educ * 3) /
+                   (b_cost + delta_ct_age * 80 + delta_ct_female * 1 + delta_ct_educ * 3)",
     wtp_highest = "-(b_small_farms + delta_sf_age * 20 + delta_sf_female * 0 + delta_sf_educ * 1) /
                    (b_cost + delta_ct_age * 20 + delta_ct_female * 0 + delta_ct_educ * 1)",
     wtp_diff = "(-(b_small_farms + delta_sf_age * 20 + delta_sf_female * 0 + delta_sf_educ * 1) /
                    (b_cost + delta_ct_age * 20 + delta_ct_female * 0 + delta_ct_educ * 1)) -
-                 -(b_small_farms + delta_sf_age * 80 + delta_sf_female * 0 + delta_sf_educ * 3) /
-                   (b_cost + delta_ct_age * 80 + delta_ct_female * 0 + delta_ct_educ * 3)"
+                 -(b_small_farms + delta_sf_age * 80 + delta_sf_female * 1 + delta_sf_educ * 3) /
+                   (b_cost + delta_ct_age * 80 + delta_ct_female * 1 + delta_ct_educ * 3)"
   )
 )
 
@@ -758,11 +758,11 @@ all(round(conditionals_lh, 10) == round(conditionals$r_lh, 10))
 ## First 10 rows of the unconditionals ----
 tibble(
   id = conditionals$r_lh[1:10, 1],
-  post_mean = rnd(conditionals$r_lh[1:10, 2],10),
-  post_sd = rnd(conditionals$r_lh[1:10, 3],10),
+  post_mean = round(conditionals$r_lh[1:10, 2],10),
+  post_sd = round(conditionals$r_lh[1:10, 3],10),
   id_individual = unlist(conditionals_lh[1:10, 1]),
-  post_mean1 = rnd(unlist(conditionals_lh[1:10, 2]),10),
-  post_sd1 = rnd(unlist(conditionals_lh[1:10, 3]),10)
+  post_mean1 = round(unlist(conditionals_lh[1:10, 2]),10),
+  post_sd1 = round(unlist(conditionals_lh[1:10, 3]),10)
 ) |>
   gt() |>
   cols_label(
@@ -901,7 +901,7 @@ conditionals_lh |>
   ggplot(aes(x = post_mean_wtp, fill = female)) +
   geom_density(alpha = 0.4) +
   labs(
-    x = "Marginal utility for low turbines (conditional means)",
+    x = "Marginal WTP for low turbines (conditional means)",
     y = "Density"
   ) +
   theme_bw()
@@ -913,7 +913,7 @@ conditionals_lh |>
   ggplot(aes(x = post_mean_wtp, fill = education)) +
   geom_density(alpha = 0.4) +
   labs(
-    x = "Marginal utility for low turbines (conditional means)",
+    x = "Marginal WTP for low turbines (conditional means)",
     y = "Density"
   ) +
   theme_bw()
@@ -1114,7 +1114,7 @@ conds1 <- as.vector(c(cond.lt1(randCoeff(model$estimate), alt_data), quantile(co
 #### HIDDEN CHUNK ----
 sim.dist <- cond_means_sim
 
-mean.x <- unlist(conditionals_lh[1, 2])
+mean.x <- unlist(conditionals_lh[1, 5])
 
 brks <- seq(quantile(sim.dist, 0.025), quantile(sim.dist, 0.975), length = 50)
 brks <- c(brks[1] - (brks[2]-brks[1]) * rev(1:1000), brks)
