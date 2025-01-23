@@ -75,7 +75,13 @@ wtp_results_delta |>
   geom_vline(data = wtp_results_delta, mapping = aes(xintercept = lower_ci), lty = 2) +
   geom_vline(data = wtp_results_delta, mapping = aes(xintercept = upper_ci), lty = 2) +
   facet_wrap(vars(expression), nrow = 2, scales = "free") +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 ## Table with CIs ----
 wtp_results_delta |>
@@ -346,7 +352,13 @@ soc_dem |>
     x = "Age (in years)",
     y = "Marginal WTP (€ per month)",
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 ## Tabulate marginal WTP by gender holding all else constant ----
 soc_dem |>
@@ -719,7 +731,13 @@ tibble(
     x = "Marginal utility (unconditional distribution)",
     y = "Density"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 ## Unconditional distributions ----
 unconditionals <- apollo_unconditionals(
@@ -787,7 +805,13 @@ conditionals_lh |>
     x = "Marginal utility for low turbines (conditional means)",
     y = "Density"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 
 ## Kernel density means ----
@@ -904,7 +928,13 @@ conditionals_lh |>
     x = "Marginal WTP for low turbines (conditional means)",
     y = "Density"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 conditionals_lh |>
   mutate(
@@ -916,7 +946,13 @@ conditionals_lh |>
     x = "Marginal WTP for low turbines (conditional means)",
     y = "Density"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 ## Poe-test ----
 # Extract the mean of individual-specific marginal WTP distributions for females
@@ -1138,12 +1174,22 @@ tibble(sim.dist = sim.dist) |>
   xlab("Marginal utility (mean of the conditional distribution for individual 1)") +
   ylab("Frequency") +
   theme_bw() +
-  theme(legend.position = "none")
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 
 # LC-MIXL ----
+rm(list = ls())
 
 model <- readRDS(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Models/lc-mxl-2cls.rds")))
+
+database <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
+  clean_names() |>
+  filter(!is.na(choice))
 
 #### HIDDEN CHUNK ----
 apollo_initialise()
@@ -1405,7 +1451,13 @@ tibble(
     x = "Unconditional class membership probability (class 1)",
     y = "Frequency"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 tibble(
   probs = conditionals$X1
@@ -1416,7 +1468,13 @@ tibble(
     x = "Conditional class membership probability (class 1)",
     y = "Frequency"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 # Merge the conditional probabilities with demographic data and plot ----
 
@@ -1428,18 +1486,24 @@ conditionals |>
       slice(1) |>
       ungroup() |>
       select(id_individual, age, female, education),
-    by = "id_individual") |>
+    by = c("ID" = "id_individual")) |>
   mutate(
     female = factor(female)
   ) |>
-  ggplot(aes(x = probs)) +
+  ggplot(aes(x = X1)) +
   geom_histogram(breaks = seq(0, 1, by = 0.05), color = "black", fill = "#B8860B") +
   labs(
     x = "Conditional class membership probability by female (class 1)",
     y = "Frequency"
   ) +
   facet_wrap(vars(female)) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 # Compute conditional marginal WTPs for all specified names ----
 wtps_lc <- lapply(
@@ -1466,7 +1530,13 @@ tibble(
     x = "Marginal WTP for red kites (€ per month)",
     y = "Frequency"
   ) +
-  theme_bw()
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    strip.text = element_text(size = 16)
+  )
 
 #### HIDDEN SIMS ----
 
