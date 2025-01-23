@@ -247,7 +247,7 @@ ggsave(file.path("Figures", "Figure-7-4.png"), width = 14, height = 7, units = "
 # This is what I get with the redkite
 redkite_levels <- data_wind |>
   filter(!is.na(choice)) |>
-  select(choice, choice_task, contains("redkite")) |>
+  select(choice, choice_task, female, contains("redkite")) |>
   pivot_longer(
     cols = contains("redkite"),
     names_to = "alternative",
@@ -380,3 +380,30 @@ p1 + p2 + plot_layout(ncol = 2)
 
 ggsave(file.path("Figures", "Figure-7-6.png"), width = 14, height = 7, units = "in")
 
+# Figure 7.7 ----
+redkite_levels |>
+  filter(alternative != sq_alt & choice != sq_alt) |>
+  group_by(level, female) |>
+  summarize(
+    share_chosen = mean(choice == alternative)
+  ) |>
+  ggplot(mapping = aes(x = level, y = share_chosen, fill = female)) +
+  geom_bar(stat = "summary", position = "dodge") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_continuous(breaks = seq(-5, 5, by = 2.5)) +
+  labs(
+    title = "Excluding SQ choices",
+    x = "Attribute (red kite) level",
+    y = "Choice share (%) for level when available"
+  ) +
+  theme_bw() +
+  theme(
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    legend.title = element_text(size = 20),
+    axis.text = element_text(size = 20),
+    plot.title = element_text(size = 20),
+    legend.text = element_text(size = 20)
+  )
+
+ggsave(file.path("Figures", "Figure-7-7.png"), width = 14, height = 7, units = "in")
