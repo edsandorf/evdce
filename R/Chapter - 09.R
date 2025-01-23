@@ -1,6 +1,7 @@
 # Load packages ----
 library(tidyverse)
 library(apollo)
+library(janitor)
 library(gt)
 
 # Estimating a choice model ----
