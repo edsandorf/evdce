@@ -63,7 +63,11 @@ design <- generate_design(utility,
                           rows = 100,
                           model = "mnl",
                           efficiency_criteria = "d-error",
-                          algorithm = "rsc")
+                          algorithm = "rsc",
+                          control = list(
+                            max_iter = 21000,
+                            efficiency_threshold = 0.001
+                          ))
 
 # Inspect the design the design ----
 ## Summary of the design ----
