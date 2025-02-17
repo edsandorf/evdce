@@ -3,7 +3,9 @@ rm(list = ls(all = TRUE))             # Clear workspace
 
 # Loading R packages
 ## Apollo: choice models in R
-suppressPackageStartupMessages(library(apollo))                       
+library(apollo)
+library(janitor)
+library(tidyverse)
 
 # Initialize Apollo
 apollo_initialise()
@@ -12,14 +14,12 @@ apollo_initialise()
 apollo_control = list(modelName  = "LC_MXL_3Class",
                       modelDescr = "LC MXL_3Class ",
                       indivID    = "id_individual",
-                     # nCores     = 7,
-                      outputDirectory = "../ModelOutputs/",
                      noValidation    = TRUE,
                      noDiagnostics   = TRUE)
 
-# Importing data               
-database <- read.csv(file="../DataAndDesigns/Data_windmills.csv",
-                     header = TRUE)
+# Importing data
+database <- read_csv(gzcon(url("https://raw.githubusercontent.com/edsandorf/evdce/refs/heads/main/Data/data-windmills.csv"))) |>
+  clean_names()
 
 # Eliminating NA in choice
 database <- subset(database, !is.na(database$choice))
@@ -74,11 +74,11 @@ apollo_beta = c(
   cl3_cst_alloc_fun       =  -3.084182 ,
   cl3_b_age               =  -0.008961 ,
   cl3_b_female            =  -2.167977 ,
-  cl3_b_educ              =  -0.074765 
+  cl3_b_educ              =  -0.074765
   )
 
 
-# Vector of parameters to be kept fixed at their starting value 
+# Vector of parameters to be kept fixed at their starting value
 apollo_fixed = c("cl1_asc_alt1", "cl2_asc_alt1", "cl3_asc_alt1",
                  "cl1_cst_alloc_fun" , "cl1_b_age", "cl1_b_female", "cl1_b_educ"         )
 #
@@ -100,21 +100,21 @@ apollo_lcPars=function(apollo_beta, apollo_inputs){
   lcpars[["b_red_kite"       ]] = list(cl1_b_red_kite        , cl2_b_red_kite       , cl3_b_red_kite        )
   lcpars[["b_min_distance"   ]] = list(cl1_b_min_distance    , cl2_b_min_distance   , cl3_b_min_distance    )
   lcpars[["b_cost"           ]] = list(cl1_b_cost            , cl2_b_cost           , cl3_b_cost            )
-  
+
   ### Utilities of class allocation model
   V=list()
- V[["class_a"]] = cl1_cst_alloc_fun  + cl1_b_age * age + cl1_b_female * female + cl1_b_educ * education 
+ V[["class_a"]] = cl1_cst_alloc_fun  + cl1_b_age * age + cl1_b_female * female + cl1_b_educ * education
  V[["class_b"]] = cl2_cst_alloc_fun  + cl2_b_age * age + cl2_b_female * female + cl2_b_educ * education
  V[["class_c"]] = cl3_cst_alloc_fun  + cl3_b_age * age + cl3_b_female * female + cl3_b_educ * education
 
   ### Settings for class allocation models
   classAlloc_settings = list(
-    classes      = c(class_a=1, class_b=2, class_c=3), 
-    utilities    = V  
+    classes      = c(class_a=1, class_b=2, class_c=3),
+    utilities    = V
   )
-  
+
   lcpars[["pi_values"]] = apollo_classAlloc(classAlloc_settings)
-  
+
   return(lcpars)
 }
 
@@ -129,69 +129,69 @@ apollo_inputs = apollo_validateInputs()
 # ################################################################# #
 
 apollo_probabilities=function(apollo_beta, apollo_inputs, functionality="estimate"){
-  
+
   ### Attach inputs and detach after function exit
   apollo_attach(apollo_beta, apollo_inputs)
   on.exit(apollo_detach(apollo_beta, apollo_inputs))
-  
+
   ### Create list of probabilities P
   P = list()
-  
+
   ### Define settings for MNL model component that are generic across classes
   mnl_settings = list(
     alternatives = c(alt1=1, alt2=2, alt3=3),
     avail        = list(alt1=1, alt2=1, alt3=1),
     choiceVar    = choice
   )
-  
+
   ### Loop over classes
   for(s in 1:length(pi_values)){
-    
+
     ### Compute class-specific utilities
     V=list()
-    
+
     V[["alt1"]] = (   asc_alt1         [[s]]
-                      + b_medium_farms   [[s]] * alt1_farm2   
-                      + b_small_farms    [[s]] * alt1_farm3   
-                      + b_medium_height[[s]] * alt1_height2 
-                      + b_low_height   [[s]] * alt1_height3 
-                      + b_red_kite       [[s]] * alt1_redkite 
+                      + b_medium_farms   [[s]] * alt1_farm2
+                      + b_small_farms    [[s]] * alt1_farm3
+                      + b_medium_height[[s]] * alt1_height2
+                      + b_low_height   [[s]] * alt1_height3
+                      + b_red_kite       [[s]] * alt1_redkite
                       + b_min_distance   [[s]] * alt1_distance
                       + b_cost           [[s]] * alt1_cost     )
-    
+
     V[["alt2"]] = (   asc_alt2         [[s]]
-                      + b_medium_farms   [[s]] * alt2_farm2   
-                      + b_small_farms    [[s]] * alt2_farm3   
-                      + b_medium_height[[s]] * alt2_height2 
-                      + b_low_height   [[s]] * alt2_height3 
-                      + b_red_kite       [[s]] * alt2_redkite 
+                      + b_medium_farms   [[s]] * alt2_farm2
+                      + b_small_farms    [[s]] * alt2_farm3
+                      + b_medium_height[[s]] * alt2_height2
+                      + b_low_height   [[s]] * alt2_height3
+                      + b_red_kite       [[s]] * alt2_redkite
                       + b_min_distance   [[s]] * alt2_distance
-                      + b_cost           [[s]] * alt2_cost     ) 
-    
+                      + b_cost           [[s]] * alt2_cost     )
+
     V[["alt3"]] = (   asc_alt3         [[s]]
-                      + b_medium_farms   [[s]] * alt3_farm2   
-                      + b_small_farms    [[s]] * alt3_farm3   
-                      + b_medium_height[[s]] * alt3_height2 
-                      + b_low_height   [[s]] * alt3_height3 
-                      + b_red_kite       [[s]] * alt3_redkite 
+                      + b_medium_farms   [[s]] * alt3_farm2
+                      + b_small_farms    [[s]] * alt3_farm3
+                      + b_medium_height[[s]] * alt3_height2
+                      + b_low_height   [[s]] * alt3_height3
+                      + b_red_kite       [[s]] * alt3_redkite
                       + b_min_distance   [[s]] * alt3_distance
                       + b_cost           [[s]] * alt3_cost     )
-    
+
     mnl_settings$utilities     = V
     mnl_settings$componentName = paste0("Class_",s)
-    
+
     ### Compute within-class choice probabilities using MNL model
     P[[paste0("Class_",s)]] = apollo_mnl(mnl_settings, functionality)
-    
+
     ### Take product across observation for same individual
     P[[paste0("Class_",s)]] = apollo_panelProd(P[[paste0("Class_",s)]], apollo_inputs ,functionality)
-    
+
   }
-  
+
   ### Compute latent class model probabilities
   lc_settings  = list(inClassProb = P, classProb=pi_values)
   P[["model"]] = apollo_lc(lc_settings, apollo_inputs, functionality)
-  
+
   ### Prepare and return outputs of function
   P = apollo_prepareProb(P, apollo_inputs, functionality)
   return(P)
@@ -200,29 +200,29 @@ apollo_probabilities=function(apollo_beta, apollo_inputs, functionality="estimat
 # ################################################################# #
 #### MODEL ESTIMATION                                            ####
 # ################################################################# #
-#model=apollo_lcEM(apollo_beta, apollo_fixed, apollo_probabilities, 
+#model=apollo_lcEM(apollo_beta, apollo_fixed, apollo_probabilities,
 #                  apollo_inputs, lcEM_settings = list(EMmaxIterations=100))
 #
 #
-model=apollo_lcEM(apollo_beta, 
-                  apollo_fixed, 
-                  apollo_probabilities, 
-                  apollo_inputs, 
+model=apollo_lcEM(apollo_beta,
+                  apollo_fixed,
+                  apollo_probabilities,
+                  apollo_inputs,
                   lcEM_settings = list(EMmaxIterations=100))
 
 
 ### Estimate model
-#model = apollo_estimate(apollo_beta, apollo_fixed, 
+#model = apollo_estimate(apollo_beta, apollo_fixed,
 #                        apollo_probabilities, apollo_inputs,
-#                        estimate_settings = list(writeIter = FALSE, 
+#                        estimate_settings = list(writeIter = FALSE,
 #                                                 silent    = FALSE,
 #                                                 iterMax   = 500,
 #                                                 estimationRoutine = "bgw"))
 #
-# Saving output in ../ModelOutputs/" directory 
+# Saving output in ../ModelOutputs/" directory
 apollo_saveOutput(model)
 
-# Printing output   
+# Printing output
 options(width = 105)
 apollo_modelOutput(model)
 
